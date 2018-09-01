@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <install4j version="6.1.6" transformSequenceNumber="5">
-  <directoryPresets config="../j-lawyer-releases/j-lawyer-server/database-scripts" />
-  <application name="j-lawyer.org (Server)" distributionSourceDir="" applicationId="8434-1412-3881-2992" mediaDir="../j-lawyer-server-installer/media" mediaFilePattern="${compiler:sys.shortName}_${compiler:sys.platform}_${compiler:sys.version}" compression="9" lzmaCompression="true" pack200Compression="true" excludeSignedFromPacking="true" commonExternalFiles="false" createMd5Sums="true" shrinkRuntime="true" shortName="j-lawyer-server" publisher="j-lawyer.org" publisherWeb="http://www.j-lawyer.org" version="1.9" allPathsRelative="true" backupOnSave="false" autoSave="false" convertDotsToUnderscores="true" macSignature="????" macVolumeId="1fed40d665d2ed1b" javaMinVersion="1.8" javaMaxVersion="" allowBetaVM="false" jdkMode="runtimeJre" jdkName="">
+  <directoryPresets config="../j-lawyer-releases/j-lawyer-server/backupmanager" />
+  <application name="j-lawyer.org (Server)" distributionSourceDir="" applicationId="8434-1412-3881-2992" mediaDir="../j-lawyer-server-installer/media" mediaFilePattern="${compiler:sys.shortName}_${compiler:sys.platform}_${compiler:sys.version}" compression="9" lzmaCompression="true" pack200Compression="true" excludeSignedFromPacking="true" commonExternalFiles="false" createMd5Sums="true" shrinkRuntime="true" shortName="j-lawyer-server" publisher="j-lawyer.org" publisherWeb="http://www.j-lawyer.org" version="1.9.1" allPathsRelative="true" backupOnSave="false" autoSave="false" convertDotsToUnderscores="true" macSignature="????" macVolumeId="1fed40d665d2ed1b" javaMinVersion="1.8" javaMaxVersion="" allowBetaVM="false" jdkMode="runtimeJre" jdkName="">
     <languages skipLanguageSelection="false" languageSelectionInPrincipalLanguage="false">
       <principalLanguage id="de" customLocalizationFile="../j-lawyer-server-installer/j-lawyer-installer-server-i18n.properties" />
       <additionalLanguages>
@@ -83,11 +83,50 @@
         </include>
         <dependencies />
       </component>
+      <component name="${i18n:components.backupmgr.name}" id="2203" customizedId="" displayDescription="false" hideHelpButton="false" selected="true" changeable="true" downloadable="false" hidden="false">
+        <description />
+        <include all="false">
+          <entry location="j-lawyer-backupmgr" fileType="regular" />
+        </include>
+        <dependencies />
+      </component>
     </components>
   </files>
   <launchers>
     <launcher name="start-server.sh" id="729" customizedId="" external="true" excludeFromMenu="false" unixMode="755" unixAutoStart="true" menuName="" externalFile="start-server.sh" />
     <launcher name="start-server.bat" id="730" customizedId="" external="true" excludeFromMenu="false" unixMode="755" unixAutoStart="true" menuName="" externalFile="start-server.bat" />
+    <launcher name="j-lawyer-backupmgr" id="2041" customizedId="" external="false" excludeFromMenu="false" unixMode="755" unixAutoStart="true" menuName="" icnsFile="" customMacBundleIdentifier="false" macBundleIdentifier="" swtApp="false" fileset="" macBundleBinary="JavaApplicationStub" addMacEntitlements="false" macEntitlementsFile="" useCustomMacosExecutableName="false" customMacosExecutableName="" useJavaMinVersionOverride="false" javaMinVersionOverride="" useJavaMaxVersionOverride="false" javaMaxVersionOverride="">
+      <executable name="j-lawyer-backupmgr" type="1" iconSet="true" iconFile="" executableDir="j-lawyer-backupmgr" redirectStderr="false" stderrFile="error.log" stderrMode="overwrite" redirectStdout="false" stdoutFile="output.log" stdoutMode="overwrite" failOnStderrOutput="true" executableMode="1" changeWorkingDirectory="true" workingDirectory="." singleInstance="false" serviceStartType="2" serviceDependencies="" serviceDescription="" jreLocation="" executionLevel="asInvoker" checkConsoleParameter="false" globalSingleInstance="false" singleInstanceActivate="true" dpiAware="false">
+        <versionInfo include="false" fileVersion="" fileDescription="" legalCopyright="" internalName="" productName="" />
+      </executable>
+      <splashScreen show="false" width="0" height="0" bitmapFile="" windowsNative="false" textOverlay="false">
+        <text>
+          <statusLine x="20" y="20" text="" fontSize="8" fontColor="0,0,0" bold="false" />
+          <versionLine x="20" y="40" text="version ${compiler:sys.version}" fontSize="8" fontColor="0,0,0" bold="false" />
+        </text>
+      </splashScreen>
+      <java mainClass="org.jlawyer.backupmgr.BackupManagerLauncher" vmParameters="" arguments="" allowVMPassthroughParameters="true" preferredVM="" bundleRuntime="true">
+        <classPath>
+          <archive location="j-lawyer-backupmgr/j-lawyer-backupmgr-1.9.1.jar" failOnError="false" />
+        </classPath>
+        <nativeLibraryDirectories />
+        <vmOptions />
+      </java>
+      <includedFiles />
+      <unextractableFiles />
+      <vmOptionsFile mode="template" overwriteMode="0" fileMode="644">
+        <content />
+      </vmOptionsFile>
+      <customScript mode="1" file="">
+        <content />
+      </customScript>
+      <infoPlist mode="1" file="">
+        <content />
+      </infoPlist>
+      <iconImageFiles>
+        <file path="../j-lawyer-releases/j-lawyer-server/j-lawyer-backupmgr/j-lawyer-logo-32px.png" />
+      </iconImageFiles>
+    </launcher>
   </launchers>
   <installerGui installerType="1" addOnAppId="" suggestPreviousLocations="true" autoUpdateDescriptorUrl="" useAutoUpdateBaseUrl="false" autoUpdateBaseUrl="">
     <staticMembers script="" />
@@ -3423,7 +3462,7 @@ if(Util.isWindows()) {
               </formComponent>
             </formComponents>
           </screen>
-          <screen name="Update-1.8.1-to-1.9" id="1834" customizedId="" beanClass="com.install4j.runtime.beans.screens.CustomizableProgressScreen" enabled="true" commentSet="false" comment="" actionElevationType="inherit" rollbackBarrier="false" backButton="2" finishScreen="false" wizardIndexChangeType="unchanged" wizardIndexKey="">
+          <screen name="Update-1.9-to-1.9.1" id="1834" customizedId="" beanClass="com.install4j.runtime.beans.screens.CustomizableProgressScreen" enabled="true" commentSet="false" comment="" actionElevationType="inherit" rollbackBarrier="false" backButton="2" finishScreen="false" wizardIndexChangeType="unchanged" wizardIndexKey="">
             <serializedBean>
               <java class="java.beans.XMLDecoder">
                 <object class="com.install4j.runtime.beans.screens.CustomizableProgressScreen">
@@ -3431,7 +3470,7 @@ if(Util.isWindows()) {
                     <string>Ihre Installation wird aktualisiert...</string>
                   </void>
                   <void property="title">
-                    <string>Update von Version 1.8.1 auf 1.9</string>
+                    <string>Update von Version 1.9 auf 1.9.1</string>
                   </void>
                 </object>
               </java>
@@ -3716,12 +3755,12 @@ if(Util.isWindows()) {
                 </serializedBean>
                 <condition>Util.isMacOS()</condition>
               </action>
-              <action name="Installiere j-lawyer.org 1.8.1 Serverdateien" id="1845" customizedId="" beanClass="com.install4j.runtime.beans.actions.control.SetMessageAction" enabled="true" commentSet="false" comment="" actionElevationType="none" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+              <action name="Installiere j-lawyer.org 1.9.1 Serverdateien" id="1845" customizedId="" beanClass="com.install4j.runtime.beans.actions.control.SetMessageAction" enabled="true" commentSet="false" comment="" actionElevationType="none" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
                 <serializedBean>
                   <java class="java.beans.XMLDecoder">
                     <object class="com.install4j.runtime.beans.actions.control.SetMessageAction">
                       <void property="statusMessage">
-                        <string>Installiere j-lawyer.org 1.9 Serverdateien</string>
+                        <string>Installiere j-lawyer.org 1.9.1 Serverdateien</string>
                       </void>
                       <void property="useStatus">
                         <boolean>true</boolean>
@@ -3743,7 +3782,8 @@ fileInfo.getRelativeFilePath().endsWith("update-1.8.1-to-1.9.sql") ||
 fileInfo.getRelativeFilePath().endsWith("j-lawyer-server.ear") || 
 fileInfo.getRelativeFilePath().indexOf("service-start")&gt;-1 ||
 fileInfo.getRelativeFilePath().indexOf("service-stop")&gt;-1 || 
-fileInfo.getRelativeFilePath().indexOf("Mastervorlage")&gt;-1</string>
+fileInfo.getRelativeFilePath().indexOf("Mastervorlage")&gt;-1 || 
+fileInfo.getRelativeFilePath().indexOf("backupmgr")&gt;-1</string>
                           </void>
                         </object>
                       </void>
@@ -3816,7 +3856,7 @@ fileInfo.getRelativeFilePath().indexOf("Mastervorlage")&gt;-1</string>
                             <string>${installer:mysql.rootpassword}</string>
                           </void>
                           <void index="2">
-                            <string>update-1.8.1-to-1.9.sql</string>
+                            <string>update-1.9-to-1.9.1.sql</string>
                           </void>
                         </array>
                       </void>
@@ -3896,7 +3936,7 @@ fileInfo.getRelativeFilePath().indexOf("Mastervorlage")&gt;-1</string>
                             <string>${installer:mysql.rootpassword}</string>
                           </void>
                           <void index="1">
-                            <string>update-1.8.1-to-1.9.sql</string>
+                            <string>update-1.9-to-1.9.1.sql</string>
                           </void>
                         </array>
                       </void>
@@ -3940,7 +3980,7 @@ fileInfo.getRelativeFilePath().indexOf("Mastervorlage")&gt;-1</string>
                             <string>${installer:mysql.rootpassword}</string>
                           </void>
                           <void index="1">
-                            <string>update-1.8.1-to-1.9.sql</string>
+                            <string>update-1.9-to-1.9.1.sql</string>
                           </void>
                         </array>
                       </void>
@@ -4255,7 +4295,7 @@ fileInfo.getRelativeFilePath().indexOf("Mastervorlage")&gt;-1</string>
     </applications>
   </installerGui>
   <mediaSets>
-    <windows name="Windows-x86" id="28" customizedId="" mediaFileName="" installDir="${compiler:sys.shortName}" overridePrincipalLanguage="false" jreBitType="32" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" downloadURL="" includeAllDownloadableComponents="false" includedJRE="windows-x86-1.8.0_92" manualJREEntry="false" bundleType="1" jreURL="" jreShared="false" directDownload="false" installOnlyIfNecessary="false" customInstallBaseDir="" contentFilesType="1" verifyIntegrity="true">
+    <windows name="Windows-x86" id="28" customizedId="" mediaFileName="" installDir="${compiler:sys.shortName}" overridePrincipalLanguage="false" jreBitType="32" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" downloadURL="" includeAllDownloadableComponents="false" includedJRE="windows-x86-1.8.0_181" manualJREEntry="false" bundleType="1" jreURL="" jreShared="false" directDownload="false" installOnlyIfNecessary="false" customInstallBaseDir="" contentFilesType="1" verifyIntegrity="true">
       <excludedComponents />
       <includedDownloadableComponents />
       <excludedLaunchers />
@@ -4268,7 +4308,7 @@ fileInfo.getRelativeFilePath().indexOf("Mastervorlage")&gt;-1</string>
         <customAttributes />
       </autoUpdate>
     </windows>
-    <windows name="Windows-x64" id="29" customizedId="" mediaFileName="" installDir="${compiler:sys.shortName}" overridePrincipalLanguage="false" jreBitType="64" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" downloadURL="" includeAllDownloadableComponents="false" includedJRE="windows-amd64-1.8.0_92" manualJREEntry="false" bundleType="1" jreURL="" jreShared="false" directDownload="false" installOnlyIfNecessary="false" customInstallBaseDir="" contentFilesType="1" verifyIntegrity="true">
+    <windows name="Windows-x64" id="29" customizedId="" mediaFileName="" installDir="${compiler:sys.shortName}" overridePrincipalLanguage="false" jreBitType="64" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" downloadURL="" includeAllDownloadableComponents="false" includedJRE="windows-amd64-1.8.0_181" manualJREEntry="false" bundleType="1" jreURL="" jreShared="false" directDownload="false" installOnlyIfNecessary="false" customInstallBaseDir="" contentFilesType="1" verifyIntegrity="true">
       <excludedComponents />
       <includedDownloadableComponents />
       <excludedLaunchers />
@@ -4281,7 +4321,7 @@ fileInfo.getRelativeFilePath().indexOf("Mastervorlage")&gt;-1</string>
         <customAttributes />
       </autoUpdate>
     </windows>
-    <macosFolder name="Mac OS X Folder" id="1397" customizedId="" mediaFileName="" installDir="${compiler:sys.shortName}" overridePrincipalLanguage="false" jreBitType="all" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" downloadURL="" includeAllDownloadableComponents="false" includedJRE="macosx-amd64-1.8.0_102" manualJREEntry="false" bundleType="1" jreURL="" jreShared="false" directDownload="false" installOnlyIfNecessary="false" appleJre="false" requiredVmIdPrefix="" customInstallBaseDir="" contentFilesType="1" installerName="${i18n:InstallerName(${compiler:sys.fullName})}" volumeName="${compiler:sys.shortName}" compressDmg="false" signLaunchers="false">
+    <macosFolder name="Mac OS X Folder" id="1397" customizedId="" mediaFileName="" installDir="${compiler:sys.shortName}" overridePrincipalLanguage="false" jreBitType="all" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" downloadURL="" includeAllDownloadableComponents="false" includedJRE="macosx-amd64-1.8.0_181" manualJREEntry="false" bundleType="1" jreURL="" jreShared="false" directDownload="false" installOnlyIfNecessary="false" appleJre="false" requiredVmIdPrefix="" customInstallBaseDir="" contentFilesType="1" installerName="${i18n:InstallerName(${compiler:sys.fullName})}" volumeName="${compiler:sys.shortName}" compressDmg="false" signLaunchers="false">
       <excludedComponents />
       <includedDownloadableComponents />
       <excludedLaunchers />
@@ -4313,7 +4353,10 @@ fileInfo.getRelativeFilePath().indexOf("Mastervorlage")&gt;-1</string>
     </unixInstaller>
   </mediaSets>
   <buildIds buildAll="false">
+    <mediaSet refId="28" />
+    <mediaSet refId="29" />
     <mediaSet refId="1397" />
+    <mediaSet refId="31" />
   </buildIds>
   <buildOptions verbose="true" faster="false" disableSigning="false" disableJreBundling="false" debug="false" />
 </install4j>
