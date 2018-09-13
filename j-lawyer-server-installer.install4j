@@ -3778,7 +3778,7 @@ if(Util.isWindows()) {
                         <object class="com.install4j.api.beans.ScriptProperty">
                           <void property="value">
                             <string>fileInfo.getRelativeFilePath().indexOf("update-database")&gt;-1 ||
-fileInfo.getRelativeFilePath().endsWith("update-1.8.1-to-1.9.sql") || 
+fileInfo.getRelativeFilePath().endsWith("update-1.9-to-1.9.1.sql") || 
 fileInfo.getRelativeFilePath().endsWith("j-lawyer-server.ear") || 
 fileInfo.getRelativeFilePath().indexOf("service-start")&gt;-1 ||
 fileInfo.getRelativeFilePath().indexOf("service-stop")&gt;-1 || 
@@ -4353,7 +4353,6 @@ fileInfo.getRelativeFilePath().indexOf("backupmgr")&gt;-1</string>
     </unixInstaller>
   </mediaSets>
   <buildIds buildAll="false">
-    <mediaSet refId="28" />
     <mediaSet refId="29" />
     <mediaSet refId="1397" />
     <mediaSet refId="31" />
