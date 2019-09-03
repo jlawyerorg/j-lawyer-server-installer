@@ -2801,6 +2801,64 @@ fileInfo.getRelativeFilePath().indexOf("wildfly")&gt;-1</property>
                   <property name="searchValue" type="string">JLAWYERSERVERINSTALLATIONDIR</property>
                 </serializedBean>
               </action>
+              <action id="2639" beanClass="com.install4j.runtime.beans.actions.files.MoveFileAction" actionElevationType="elevated" rollbackBarrierExitCode="0">
+                <serializedBean>
+                  <property name="destinationFile">
+                    <object class="java.io.File">
+                      <string>/etc/default/j-lawyer-server.191</string>
+                    </object>
+                  </property>
+                  <property name="files" type="array" class="java.io.File" length="1">
+                    <element index="0">
+                      <object class="java.io.File">
+                        <string>/etc/default/j-lawyer-server</string>
+                      </object>
+                    </element>
+                  </property>
+                  <property name="overwriteMode" type="enum" class="com.install4j.api.context.OverwriteMode" value="ALWAYS" />
+                </serializedBean>
+                <condition>Util.isLinux()</condition>
+              </action>
+              <action name="Download script" id="2637" beanClass="com.install4j.runtime.beans.actions.net.DownloadFileAction" actionElevationType="elevated">
+                <serializedBean>
+                  <property name="targetFile">
+                    <object class="java.io.File">
+                      <string>/etc/default/j-lawyer-server</string>
+                    </object>
+                  </property>
+                  <property name="url" type="string">${compiler:download.scripts.base}/j-lawyer-server</property>
+                </serializedBean>
+                <condition>Util.isLinux()</condition>
+              </action>
+              <action name="Set installation dir in Wildlfy configuration" id="2638" beanClass="com.install4j.runtime.beans.actions.text.ModifyTextFileAction" actionElevationType="elevated">
+                <serializedBean>
+                  <property name="encoding" type="string" />
+                  <property name="files" type="array" class="java.io.File" length="1">
+                    <element index="0">
+                      <object class="java.io.File">
+                        <string>/etc/default/j-lawyer-server</string>
+                      </object>
+                    </element>
+                  </property>
+                  <property name="replaceValue" type="string">${installer:sys.installationDir}</property>
+                  <property name="searchValue" type="string">JLAWYERSERVERINSTALLATIONDIR</property>
+                </serializedBean>
+                <condition>Util.isLinux()</condition>
+              </action>
+              <action id="2640" beanClass="com.install4j.runtime.beans.actions.files.SetOwnerAction" actionElevationType="elevated">
+                <serializedBean>
+                  <property name="files" type="array" class="java.io.File" length="1">
+                    <element index="0">
+                      <object class="java.io.File">
+                        <string>${installer:sys.installationDir}/wildfly</string>
+                      </object>
+                    </element>
+                  </property>
+                  <property name="owner" type="string">j-lawyer-server:j-lawyer-server</property>
+                  <property name="recursive" type="boolean" value="true" />
+                </serializedBean>
+                <condition>Util.isLinux()</condition>
+              </action>
               <action name="Set JAVA_HOME in start-server.bat" id="2532" beanClass="com.install4j.runtime.beans.actions.text.ModifyTextFileAction" actionElevationType="elevated">
                 <serializedBean>
                   <property name="encoding" type="string" />
@@ -3024,6 +3082,54 @@ fileInfo.getRelativeFilePath().indexOf("wildfly")&gt;-1</property>
                   </property>
                 </serializedBean>
                 <condition>Util.isWindows()</condition>
+              </action>
+              <action name="*.sh chmod" id="2641" beanClass="com.install4j.runtime.beans.actions.files.SetModeAction" actionElevationType="elevated">
+                <serializedBean>
+                  <property name="files" type="array" class="java.io.File" length="8">
+                    <element index="0">
+                      <object class="java.io.File">
+                        <string>wildfly/bin/jboss-cli.sh</string>
+                      </object>
+                    </element>
+                    <element index="1">
+                      <object class="java.io.File">
+                        <string>wildfly/bin/vault.sh</string>
+                      </object>
+                    </element>
+                    <element index="2">
+                      <object class="java.io.File">
+                        <string>wildfly/bin/domain.sh</string>
+                      </object>
+                    </element>
+                    <element index="3">
+                      <object class="java.io.File">
+                        <string>wildfly/bin/run.sh</string>
+                      </object>
+                    </element>
+                    <element index="4">
+                      <object class="java.io.File">
+                        <string>wildfly/bin/standalone.sh</string>
+                      </object>
+                    </element>
+                    <element index="5">
+                      <object class="java.io.File">
+                        <string>start-server.sh</string>
+                      </object>
+                    </element>
+                    <element index="6">
+                      <object class="java.io.File">
+                        <string>stop-server.sh</string>
+                      </object>
+                    </element>
+                    <element index="7">
+                      <object class="java.io.File">
+                        <string>start-server-mac.sh</string>
+                      </object>
+                    </element>
+                  </property>
+                  <property name="mode" type="string">ugo+x</property>
+                </serializedBean>
+                <condition>Util.isLinux() || Util.isMacOS()</condition>
               </action>
               <action name="Start service on Windows" id="1893" beanClass="com.install4j.runtime.beans.actions.misc.RunExecutableAction" actionElevationType="elevated">
                 <serializedBean>
