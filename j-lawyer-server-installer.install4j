@@ -2933,6 +2933,22 @@ fileInfo.getRelativeFilePath().indexOf("wildfly")&gt;-1</property>
                 </serializedBean>
                 <condition>Util.isLinux() || Util.isMacOS()</condition>
               </action>
+              <action name="Replace Wildfly directory in j-lawyer-server.plist" id="2743" beanClass="com.install4j.runtime.beans.actions.text.ModifyTextFileAction" actionElevationType="elevated">
+                <serializedBean>
+                  <property name="encoding" type="string" />
+                  <property name="failIfNoReplacement" type="boolean" value="true" />
+                  <property name="files" type="array" class="java.io.File" length="1">
+                    <element index="0">
+                      <object class="java.io.File">
+                        <string>/Library/LaunchDaemons/j-lawyer-server.plist</string>
+                      </object>
+                    </element>
+                  </property>
+                  <property name="replaceValue" type="string">wildfly</property>
+                  <property name="searchValue" type="string">wildfly-9.0.2.Final</property>
+                </serializedBean>
+                <condition>Util.isMacOS()</condition>
+              </action>
               <action name="Aktualisiere die j-lawyer.org Datenbank..." id="1838" beanClass="com.install4j.runtime.beans.actions.control.SetMessageAction" enabled="false" actionElevationType="none">
                 <serializedBean>
                   <property name="statusMessage" type="string">Aktualisiere die j-lawyer.org Datenbank...</property>
@@ -3188,6 +3204,38 @@ fileInfo.getRelativeFilePath().indexOf("wildfly")&gt;-1</property>
                       <long>1518182590138</long>
                     </object>
                   </property>
+                </serializedBean>
+                <condition>Util.isMacOS()</condition>
+              </action>
+              <action name="Replace INSTALLDIR in start-server-mac.sh" id="2840" beanClass="com.install4j.runtime.beans.actions.text.ModifyTextFileAction" actionElevationType="elevated">
+                <serializedBean>
+                  <property name="encoding" type="string" />
+                  <property name="failIfNoReplacement" type="boolean" value="true" />
+                  <property name="files" type="array" class="java.io.File" length="1">
+                    <element index="0">
+                      <object class="java.io.File">
+                        <string>start-server-mac.sh</string>
+                      </object>
+                    </element>
+                  </property>
+                  <property name="replaceValue" type="string">${installer:sys.installationDir}</property>
+                  <property name="searchValue" type="string">INSTALLDIR</property>
+                </serializedBean>
+                <condition>Util.isMacOS()</condition>
+              </action>
+              <action name="Replace PREFJRE in start-server-mac.sh" id="2841" beanClass="com.install4j.runtime.beans.actions.text.ModifyTextFileAction" actionElevationType="elevated">
+                <serializedBean>
+                  <property name="encoding" type="string" />
+                  <property name="failIfNoReplacement" type="boolean" value="true" />
+                  <property name="files" type="array" class="java.io.File" length="1">
+                    <element index="0">
+                      <object class="java.io.File">
+                        <string>start-server-mac.sh</string>
+                      </object>
+                    </element>
+                  </property>
+                  <property name="replaceValue" type="string">${installer:sys.preferredJre}</property>
+                  <property name="searchValue" type="string">PREFJRE</property>
                 </serializedBean>
                 <condition>Util.isMacOS()</condition>
               </action>
@@ -3581,7 +3629,7 @@ return console.askYesNo(message, true);
     </unixInstaller>
   </mediaSets>
   <buildIds buildAll="false">
-    <mediaSet refId="31" />
+    <mediaSet refId="1397" />
   </buildIds>
   <buildOptions verbose="true" />
 </install4j>
