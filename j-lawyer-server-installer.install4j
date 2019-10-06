@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<install4j version="8.0.1" transformSequenceNumber="8">
+<install4j version="8.0.2" transformSequenceNumber="8">
   <directoryPresets config="../j-lawyer-releases/j-lawyer-server/backupmanager" />
   <application name="j-lawyer.org (Server)" applicationId="8434-1412-3881-2992" mediaDir="../j-lawyer-server-installer/media" compression="9" lzmaCompression="true" pack200Compression="true" shortName="j-lawyer-server" publisher="j-lawyer.org" publisherWeb="https://www.j-lawyer.org" version="1.10.0.7" allPathsRelative="true" macVolumeId="1fed40d665d2ed1b" javaMinVersion="1.8">
     <languages>
@@ -3627,9 +3627,40 @@ return console.askYesNo(message, true);
     <unixInstaller name="Unix Installer" id="31">
       <jreBundle jreBundleSource="generated" />
     </unixInstaller>
+    <linuxDeb name="Linux Deb Archive" id="2925" installDir="/usr/local/${compiler:sys.shortName}" dependencies="mysql-server-5.7,openjdk-8-jre,openjfx">
+      <jreBundle jdkProviderId="Liberica" release="OpenJDK 8u222" overrideJdkRelease="true" jreBundleSource="generated" manualJreEntry="true" />
+      <preInstallScript>sudo echo "mysql-server-5.7 mysql-server/root_password password mysql1337" | sudo debconf-set-selections
+sudo echo "mysql-server-5.7 mysql-server/root_password_again password mysql1337" | sudo debconf-set-selections</preInstallScript>
+      <postInstallScript>echo "Erstelle j-lawyer.org Datenbank..."
+cd /usr/local/j-lawyer-server/database-scripts/ &amp;&amp; sudo sh /usr/local/j-lawyer-server/database-scripts/create-database.sh mysql1337
+echo "Setze Datenbankpasswort in Konfiguration..."
+sudo sed -i -e 's/jlawyerdbpwd/mysql1337/g' /usr/local/j-lawyer-server/wildfly/standalone/configuration/standalone.xml
+echo "Setze Installationsverzeichnis in Konfiguration..."
+sudo sed -i -e 's/JLAWYERSERVERINSTALLATIONDIR/\/usr\/local\/j-lawyer-server/g' /usr/local/j-lawyer-server/wildfly/standalone/configuration/standalone.xml
+echo "Dateiberechtigungen (1)"
+sudo chmod ugo+x /usr/local/j-lawyer-server/wildfly/bin/*.sh
+echo "Dateiberechtigungen (2)"
+sudo chmod ugo+x /usr/local/j-lawyer-server/*.sh
+echo "Kopiere Dienstkonfigation..."
+sudo cp /usr/local/j-lawyer-server/wildfly/bin/init.d/jlawyer-wildfly.conf /etc/default/j-lawyer-server
+echo "Setze Wildflyverzeichnis in Konfiguration..."
+sudo sed -i -e 's/WILDFLYDIR/\/usr\/local\/j-lawyer-server\/wildfly/g' /etc/default/j-lawyer-server
+echo "Setze Wildflyuser in Konfiguration..."
+sudo sed -i -e 's/WILDFLYUSER/j-lawyer-server/g' /etc/default/j-lawyer-server
+echo "Setze Wildflyverzeichnis in Dienstinstallerskript..."
+sudo sed -i -e 's/WILDFLYDIR/\/usr\/local\/j-lawyer-server\/wildfly/g' /usr/local/j-lawyer-server/install-jlawyerorg-as-daemon.sh
+echo "Kopiere init-Script..."
+sudo cp /usr/local/j-lawyer-server/wildfly/bin/init.d/jlawyer-wildfly-init-debian.sh /etc/init.d/j-lawyer-server
+echo "Dateiberechtigungen (3)"
+sudo chmod 755 /etc/init.d/j-lawyer-server
+echo "Dateiberechtigungen (4)"
+sudo chmod 755 /etc/default/j-lawyer-server
+echo "Installiere und starte j-lawyer.org Server..."
+cd /usr/local/j-lawyer-server/ &amp;&amp; sudo sh /usr/local/j-lawyer-server/install-jlawyerorg-as-daemon.sh</postInstallScript>
+    </linuxDeb>
   </mediaSets>
   <buildIds buildAll="false">
-    <mediaSet refId="1397" />
+    <mediaSet refId="2925" />
   </buildIds>
   <buildOptions verbose="true" />
 </install4j>
