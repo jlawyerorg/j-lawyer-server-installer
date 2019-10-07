@@ -3659,7 +3659,7 @@ echo "Installiere und starte j-lawyer.org Server..."
 cd /usr/local/j-lawyer-server/ &amp;&amp; sudo sh /usr/local/j-lawyer-server/install-jlawyerorg-as-daemon.sh</postInstallScript>
     </linuxDeb>
   </mediaSets>
-  <buildIds buildAll="false">
+  <buildIds>
     <mediaSet refId="2925" />
   </buildIds>
   <buildOptions verbose="true" />
