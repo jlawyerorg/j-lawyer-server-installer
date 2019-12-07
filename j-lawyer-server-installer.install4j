@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <install4j version="8.0.2" transformSequenceNumber="8">
   <directoryPresets config="../j-lawyer-releases/j-lawyer-server/backupmanager" />
-  <application name="j-lawyer.org (Server)" applicationId="8434-1412-3881-2992" mediaDir="../j-lawyer-server-installer/media" compression="9" lzmaCompression="true" pack200Compression="true" shortName="j-lawyer-server" publisher="j-lawyer.org" publisherWeb="https://www.j-lawyer.org" version="1.11.0.0" allPathsRelative="true" macVolumeId="1fed40d665d2ed1b" javaMinVersion="1.8">
+  <application name="j-lawyer.org (Server)" applicationId="8434-1412-3881-2992" mediaDir="../j-lawyer-server-installer/media" compression="9" lzmaCompression="true" pack200Compression="true" shortName="j-lawyer-server" publisher="j-lawyer.org" publisherWeb="https://www.j-lawyer.org" version="1.11.0.1" allPathsRelative="true" macVolumeId="1fed40d665d2ed1b" javaMinVersion="1.8">
     <languages>
       <principalLanguage id="de" customLocalizationFile="../j-lawyer-server-installer/j-lawyer-installer-server-i18n.properties" />
       <additionalLanguages>
@@ -19,7 +19,7 @@
       <variable name="mac1011.mysql.downloadfile" value="mysql-5.7.16-osx10.11-x86_64.dmg" />
       <variable name="download.scripts.base" value="https://www.j-lawyer.org/downloads/scripts" />
     </variables>
-    <jreBundles jdkProviderId="Liberica" release="OpenJDK 8u212" />
+    <jreBundles jdkProviderId="Liberica" release="OpenJDK 8u232" />
   </application>
   <files>
     <mountPoints>
@@ -89,7 +89,7 @@
       <executable name="j-lawyer-backupmgr" iconSet="true" executableDir="j-lawyer-backupmgr" redirectStderr="false" executableMode="gui" dpiAware="false" />
       <java mainClass="org.jlawyer.backupmgr.BackupManagerLauncher">
         <classPath>
-          <archive location="j-lawyer-backupmgr/j-lawyer-backupmgr-1.9.1.jar" failOnError="false" />
+          <archive location="j-lawyer-backupmgr/j-lawyer-backupmgr-1.10.0.jar" failOnError="false" />
         </classPath>
       </java>
       <macStaticAssociationActions mode="selected" />
@@ -2562,7 +2562,7 @@ if(Util.isWindows()) {
           <screen name="Update-1.10-to-1.11" id="1834" beanClass="com.install4j.runtime.beans.screens.FormScreen">
             <serializedBean>
               <property name="subTitle" type="string">Ihre Installation wird aktualisiert...</property>
-              <property name="title" type="string">Update von Version 1.9.1 auf ${installer:sys.version}</property>
+              <property name="title" type="string">Update von Version 1.10 auf ${installer:sys.version}</property>
             </serializedBean>
             <condition>context.getBooleanVariable("sys.confirmedUpdateInstallation")</condition>
             <postActivation>context.getWizardContext().setControlButtonVisible(ControlButtonType.NEXT, false);
@@ -3656,8 +3656,8 @@ echo "Installiere und starte j-lawyer.org Server..."
 cd /usr/local/j-lawyer-server/ &amp;&amp; sudo sh /usr/local/j-lawyer-server/install-jlawyerorg-as-daemon.sh</postInstallScript>
     </linuxDeb>
   </mediaSets>
-  <buildIds>
-    <mediaSet refId="2925" />
+  <buildIds buildAll="false">
+    <mediaSet refId="1397" />
   </buildIds>
   <buildOptions verbose="true" />
 </install4j>
