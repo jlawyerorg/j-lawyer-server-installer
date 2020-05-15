@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <install4j version="8.0.2" transformSequenceNumber="8">
   <directoryPresets config="../j-lawyer-releases/j-lawyer-server/backupmanager" />
-  <application name="j-lawyer.org (Server)" applicationId="8434-1412-3881-2992" mediaDir="../j-lawyer-server-installer/media" compression="9" lzmaCompression="true" pack200Compression="true" shortName="j-lawyer-server" publisher="j-lawyer.org" publisherWeb="https://www.j-lawyer.org" version="1.12.0.10" allPathsRelative="true" macVolumeId="1fed40d665d2ed1b" javaMinVersion="1.8">
+  <application name="j-lawyer.org (Server)" applicationId="8434-1412-3881-2992" mediaDir="../j-lawyer-server-installer/media" compression="9" lzmaCompression="true" pack200Compression="true" shortName="j-lawyer-server" publisher="j-lawyer.org" publisherWeb="https://www.j-lawyer.org" version="1.11.0.2" allPathsRelative="true" macVolumeId="1fed40d665d2ed1b" javaMinVersion="1.8">
     <languages>
       <principalLanguage id="de" customLocalizationFile="../j-lawyer-server-installer/j-lawyer-installer-server-i18n.properties" />
       <additionalLanguages>
@@ -2559,10 +2559,10 @@ if(Util.isWindows()) {
               </formComponent>
             </formComponents>
           </screen>
-          <screen name="Update-1.11-to-1.12" id="1834" beanClass="com.install4j.runtime.beans.screens.FormScreen">
+          <screen name="Update-1.10-to-1.11" id="1834" beanClass="com.install4j.runtime.beans.screens.FormScreen">
             <serializedBean>
               <property name="subTitle" type="string">Ihre Installation wird aktualisiert...</property>
-              <property name="title" type="string">Update von Version 1.11 auf ${installer:sys.version}</property>
+              <property name="title" type="string">Update von Version 1.10 auf ${installer:sys.version}</property>
             </serializedBean>
             <condition>context.getBooleanVariable("sys.confirmedUpdateInstallation")</condition>
             <postActivation>context.getWizardContext().setControlButtonVisible(ControlButtonType.NEXT, false);
@@ -2754,7 +2754,7 @@ context.goForward(1, true, true);
               </action>
               <action name="Installiere j-lawyer.org 1.11 Serverdateien" id="1845" beanClass="com.install4j.runtime.beans.actions.control.SetMessageAction" actionElevationType="none">
                 <serializedBean>
-                  <property name="statusMessage" type="string">Installiere j-lawyer.org 1.12 Serverdateien</property>
+                  <property name="statusMessage" type="string">Installiere j-lawyer.org 1.11 Serverdateien</property>
                   <property name="useStatus" type="boolean" value="true" />
                 </serializedBean>
               </action>
@@ -3661,5 +3661,7 @@ cd /usr/local/j-lawyer-server/ &amp;&amp; sudo sh /usr/local/j-lawyer-server/ins
     <mediaSet refId="29" />
     <mediaSet refId="1397" />
     <mediaSet refId="31" />
+    <mediaSet refId="2927" />
   </buildIds>
+  <buildOptions verbose="true" />
 </install4j>
