@@ -1714,7 +1714,9 @@ return true;
                 <serializedBean>
                   <property name="displayedText" type="string">&lt;html&gt;
 MySQL User&lt;br/&gt;&amp;nbsp;&lt;br/&gt;
-${i18n:screens.mysqlinstall.users.hint}&lt;br/&gt;&amp;nbsp;&lt;br/&gt;
+&lt;font color="red"&gt;
+${i18n:screens.mysqlinstall.users.hint}
+&lt;/font&gt;&lt;br/&gt;&amp;nbsp;&lt;br/&gt;
 &lt;b&gt;root - ${installer:mysql.rootpassword}&lt;/b&gt;&lt;br/&gt;
 &lt;b&gt;jlawyer - ${installer:mysql.rootpassword}&lt;/b&gt;
 &lt;/html&gt;
