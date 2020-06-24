@@ -1434,7 +1434,8 @@ return true;</property>
               <property name="title" type="string">${i18n:screens.mysqlinstall.title}</property>
             </serializedBean>
             <condition>if(context.getBooleanVariable("sys.confirmedUpdateInstallation")) {
-    return true;
+    // since we now use Flyway, we should not need a database password anymore
+    return false;
 }
 
 // can be null in case of update runs
