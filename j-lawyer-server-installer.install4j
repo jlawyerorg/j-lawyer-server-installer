@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <install4j version="8.0.2" transformSequenceNumber="8">
   <directoryPresets config="../j-lawyer-releases/j-lawyer-server/backupmanager" />
-  <application name="j-lawyer.org (Server)" applicationId="8434-1412-3881-2992" mediaDir="../j-lawyer-server-installer/media" compression="9" lzmaCompression="true" pack200Compression="true" shortName="j-lawyer-server" publisher="j-lawyer.org" publisherWeb="https://www.j-lawyer.org" version="1.13.0.18" allPathsRelative="true" macVolumeId="1fed40d665d2ed1b" javaMinVersion="1.8">
+  <application name="j-lawyer.org (Server)" applicationId="8434-1412-3881-2992" mediaDir="../j-lawyer-server-installer/media" compression="9" lzmaCompression="true" pack200Compression="true" shortName="j-lawyer-server" publisher="j-lawyer.org" publisherWeb="https://www.j-lawyer.org" version="1.13.0.20" allPathsRelative="true" macVolumeId="1fed40d665d2ed1b" javaMinVersion="1.8">
     <languages>
       <principalLanguage id="de" customLocalizationFile="../j-lawyer-server-installer/j-lawyer-installer-server-i18n.properties" />
       <additionalLanguages>
