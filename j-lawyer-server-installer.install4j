@@ -3192,8 +3192,13 @@ fileInfo.getRelativeFilePath().indexOf("backupmgr")&gt;-1</property>
               </action>
               <action name="touch j-lawyer-server.ear on macOS" id="2003" beanClass="com.install4j.runtime.beans.actions.files.SetFiletimeAction" actionElevationType="elevated" multiExec="true">
                 <serializedBean>
-                  <property name="files" type="array" class="java.io.File" length="1">
+                  <property name="files" type="array" class="java.io.File" length="2">
                     <element index="0">
+                      <object class="java.io.File">
+                        <string>${installer:sys.installationDir}/wildfly/standalone/deployments/j-lawyer-server.ear</string>
+                      </object>
+                    </element>
+                    <element index="1">
                       <object class="java.io.File">
                         <string>wildfly/standalone/deployments/j-lawyer-server.ear</string>
                       </object>
@@ -3201,7 +3206,27 @@ fileInfo.getRelativeFilePath().indexOf("backupmgr")&gt;-1</property>
                   </property>
                   <property name="time">
                     <object class="java.util.Date">
-                      <long>1518182590138</long>
+                      <long>1606666866447</long>
+                    </object>
+                  </property>
+                </serializedBean>
+                <condition>Util.isMacOS()</condition>
+              </action>
+              <action name="touch j-lawyer-server.ear on macOS via shell" id="2928" beanClass="com.install4j.runtime.beans.actions.misc.RunExecutableAction" actionElevationType="elevated">
+                <serializedBean>
+                  <property name="arguments" type="array" elementType="string" length="1">
+                    <element index="0">${installer:sys.installationDir}/wildfly/standalone/deployments/j-lawyer-server.ear</element>
+                  </property>
+                  <property name="executable">
+                    <object class="java.io.File">
+                      <string>/usr/bin/touch</string>
+                    </object>
+                  </property>
+                  <property name="logArguments" type="boolean" value="true" />
+                  <property name="wait" type="boolean" value="true" />
+                  <property name="workingDirectory">
+                    <object class="java.io.File">
+                      <string>.</string>
                     </object>
                   </property>
                 </serializedBean>
