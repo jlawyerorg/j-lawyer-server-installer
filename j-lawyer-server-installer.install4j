@@ -1576,7 +1576,7 @@ return true;
                 </serializedBean>
                 <condition>Util.isWindows() &amp;&amp; !(Util.is64BitWindows()) &amp;&amp; "install".equalsIgnoreCase(context.getVariable("mysql.installmode").toString())</condition>
               </action>
-              <action name="mysql-install-win64.bat" id="815" beanClass="com.install4j.runtime.beans.actions.misc.RunExecutableAction" actionElevationType="elevated">
+              <action name="mysql-install-win64.bat" id="815" beanClass="com.install4j.runtime.beans.actions.misc.RunExecutableAction" actionElevationType="elevated" failureStrategy="askRetryQuit">
                 <serializedBean>
                   <property name="arguments" type="array" elementType="string" length="1">
                     <element index="0">${installer:mysql.rootpassword}</element>
@@ -1586,8 +1586,10 @@ return true;
                       <string>mysql-install-win64.bat</string>
                     </object>
                   </property>
+                  <property name="keepConsoleWindow" type="boolean" value="true" />
                   <property name="logArguments" type="boolean" value="true" />
-                  <property name="showWindowsConsole" type="boolean" value="true" />
+                  <property name="stderrRedirectionMode" type="enum" class="com.install4j.runtime.installer.helper.launching.OutputRedirectionMode" value="LOG_FILE" />
+                  <property name="stdoutRedirectionMode" type="enum" class="com.install4j.runtime.installer.helper.launching.OutputRedirectionMode" value="LOG_FILE" />
                   <property name="wait" type="boolean" value="true" />
                   <property name="workingDirectory">
                     <object class="java.io.File">
@@ -1770,7 +1772,6 @@ return true;
                     </object>
                   </property>
                   <property name="logArguments" type="boolean" value="true" />
-                  <property name="showWindowsConsole" type="boolean" value="true" />
                   <property name="wait" type="boolean" value="true" />
                   <property name="workingDirectory">
                     <object class="java.io.File">
@@ -3807,6 +3808,5 @@ cd /usr/local/j-lawyer-server/ &amp;&amp; sudo sh /usr/local/j-lawyer-server/ins
   </mediaSets>
   <buildIds buildAll="false">
     <mediaSet refId="29" />
-    <mediaSet refId="31" />
   </buildIds>
 </install4j>
