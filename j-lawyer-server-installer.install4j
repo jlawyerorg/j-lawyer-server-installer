@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<install4j version="9.0.2" transformSequenceNumber="9">
+<install4j version="10.0.3" transformSequenceNumber="10">
   <directoryPresets config="./sectigo-codesigning.pfx" />
-  <application name="j-lawyer.org (Server)" applicationId="8434-1412-3881-2992" mediaDir="../j-lawyer-server-installer/media" compression="9" lzmaCompression="true" pack200Compression="true" shortName="j-lawyer-server" publisher="j-lawyer.org" publisherWeb="https://www.j-lawyer.org" version="2.0.0.4" allPathsRelative="true" macVolumeId="1fed40d665d2ed1b" javaMinVersion="1.8">
+  <application name="j-lawyer.org (Server)" applicationId="8434-1412-3881-2992" mediaDir="../j-lawyer-server-installer/media" compression="9" lzmaCompression="true" pack200Compression="true" shortName="j-lawyer-server" publisher="j-lawyer.org" publisherWeb="https://www.j-lawyer.org" version="2.2.0.4" allPathsRelative="true" macVolumeId="1fed40d665d2ed1b" javaMinVersion="1.8">
     <languages>
       <principalLanguage id="de" customLocalizationFile="../j-lawyer-server-installer/j-lawyer-installer-server-i18n.properties" />
       <additionalLanguages>
@@ -22,7 +22,7 @@
     <codeSigning windowsEnabled="true" windowsPkcs12File="./sectigo-codesigning.pfx" />
     <jreBundles jdkProviderId="Liberica" release="8/8u302+8" />
   </application>
-  <files preserveSymlinks="false">
+  <files>
     <mountPoints>
       <mountPoint id="24" />
     </mountPoints>
@@ -93,7 +93,6 @@
           <archive location="j-lawyer-backupmgr/j-lawyer-backupmgr-1.10.0.jar" failOnError="false" />
         </classPath>
       </java>
-      <macStaticAssociationActions mode="selected" />
       <iconImageFiles>
         <file path="../j-lawyer-releases/j-lawyer-server/j-lawyer-backupmgr/j-lawyer-logo-32px.png" />
       </iconImageFiles>
@@ -3150,6 +3149,34 @@ fileInfo.getRelativeFilePath().endsWith(".odt")
                       <property name="searchValue" type="string">&lt;module-option name="unauthenticatedIdentity" value="anonymous"/&gt;</property>
                     </serializedBean>
                   </action>
+                  <action name="Replace legacy database view AppRoleBean" id="2936" beanClass="com.install4j.runtime.beans.actions.text.ModifyTextFileAction" actionElevationType="elevated" multiExec="true">
+                    <serializedBean>
+                      <property name="encoding" type="string" />
+                      <property name="files" type="array" class="java.io.File" length="1">
+                        <element index="0">
+                          <object class="java.io.File">
+                            <string>wildfly/standalone/configuration/standalone.xml</string>
+                          </object>
+                        </element>
+                      </property>
+                      <property name="replaceValue" type="string">security_roles</property>
+                      <property name="searchValue" type="string">AppRoleBean</property>
+                    </serializedBean>
+                  </action>
+                  <action name="Replace legacy database view AppUserBean" id="2937" beanClass="com.install4j.runtime.beans.actions.text.ModifyTextFileAction" actionElevationType="elevated" multiExec="true">
+                    <serializedBean>
+                      <property name="encoding" type="string" />
+                      <property name="files" type="array" class="java.io.File" length="1">
+                        <element index="0">
+                          <object class="java.io.File">
+                            <string>wildfly/standalone/configuration/standalone.xml</string>
+                          </object>
+                        </element>
+                      </property>
+                      <property name="replaceValue" type="string">security_users</property>
+                      <property name="searchValue" type="string">AppUserBean</property>
+                    </serializedBean>
+                  </action>
                 </beans>
               </group>
               <action name="Starte j-lawyer.org Server..." id="1896" beanClass="com.install4j.runtime.beans.actions.control.SetMessageAction" actionElevationType="none">
@@ -3309,7 +3336,7 @@ fileInfo.getRelativeFilePath().endsWith(".odt")
                   </property>
                   <property name="time">
                     <object class="java.util.Date">
-                      <long>1634838695503</long>
+                      <long>1636141765273</long>
                     </object>
                   </property>
                 </serializedBean>
@@ -3767,8 +3794,8 @@ return console.askYesNo(message, true);
     </styles>
   </installerGui>
   <mediaSets>
-    <windows name="Windows-x86" id="28" jreBitType="32" />
-    <windows name="Windows-x64" id="29" />
+    <windows name="Windows-x86" id="28" architecture="32" />
+    <windows name="Windows-x64" id="29" architecture="64" />
     <macosFolder name="Mac OS X Folder" id="1397" installDir="${compiler:sys.shortName}" />
     <unixInstaller name="Unix Installer" id="31" />
     <linuxDeb name="Linux Deb Archive" id="2925" installDir="/usr/local/${compiler:sys.shortName}" dependencies="mysql-server-5.7,openjdk-8-jre,openjfx">
