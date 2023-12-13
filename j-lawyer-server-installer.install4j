@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <install4j version="10.0.3" transformSequenceNumber="10">
   <directoryPresets config="./sectigo-codesigning.pfx" />
-  <application name="j-lawyer.org (Server)" applicationId="8434-1412-3881-2992" mediaDir="../j-lawyer-server-installer/media" compression="9" lzmaCompression="true" pack200Compression="true" shortName="j-lawyer-server" publisher="j-lawyer.org" publisherWeb="https://www.j-lawyer.org" version="2.3.0.22" allPathsRelative="true" macVolumeId="1fed40d665d2ed1b" javaMinVersion="1.8">
+  <application name="j-lawyer.org (Server)" applicationId="8434-1412-3881-2992" mediaDir="../j-lawyer-server-installer/media" compression="9" lzmaCompression="true" pack200Compression="true" shortName="j-lawyer-server" publisher="j-lawyer.org" publisherWeb="https://www.j-lawyer.org" version="2.5.0.4" allPathsRelative="true" macVolumeId="1fed40d665d2ed1b" javaMinVersion="1.8">
     <languages>
       <principalLanguage id="de" customLocalizationFile="../j-lawyer-server-installer/j-lawyer-installer-server-i18n.properties" />
       <additionalLanguages>
@@ -3336,7 +3336,7 @@ fileInfo.getRelativeFilePath().endsWith(".odt")
                   </property>
                   <property name="time">
                     <object class="java.util.Date">
-                      <long>1678309815410</long>
+                      <long>1694185459793</long>
                     </object>
                   </property>
                 </serializedBean>
@@ -3836,5 +3836,6 @@ cd /usr/local/j-lawyer-server/ &amp;&amp; sudo sh /usr/local/j-lawyer-server/ins
   <buildIds buildAll="false">
     <mediaSet refId="29" />
     <mediaSet refId="31" />
+    <mediaSet refId="2927" />
   </buildIds>
 </install4j>
