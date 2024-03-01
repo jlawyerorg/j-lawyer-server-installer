@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <install4j version="10.0.3" transformSequenceNumber="10">
   <directoryPresets config="./sectigo-codesigning.pfx" />
-  <application name="j-lawyer.org (Server)" applicationId="8434-1412-3881-2992" mediaDir="../j-lawyer-server-installer/media" compression="9" lzmaCompression="true" pack200Compression="true" shortName="j-lawyer-server" publisher="j-lawyer.org" publisherWeb="https://www.j-lawyer.org" version="2.5.0.4" allPathsRelative="true" macVolumeId="1fed40d665d2ed1b" javaMinVersion="1.8">
+  <application name="j-lawyer.org (Server)" applicationId="8434-1412-3881-2992" mediaDir="../j-lawyer-server-installer/media" compression="9" lzmaCompression="true" pack200Compression="true" shortName="j-lawyer-server" publisher="j-lawyer.org" publisherWeb="https://www.j-lawyer.org" version="2.6.0.17" allPathsRelative="true" macVolumeId="1fed40d665d2ed1b" javaMinVersion="1.8">
     <languages>
       <principalLanguage id="de" customLocalizationFile="../j-lawyer-server-installer/j-lawyer-installer-server-i18n.properties" />
       <additionalLanguages>
@@ -18,9 +18,14 @@
       <variable name="download.3rdparty.mysql.version" value="5.7" />
       <variable name="mac1011.mysql.downloadfile" value="mysql-5.7.16-osx10.11-x86_64.dmg" />
       <variable name="download.scripts.base" value="https://www.j-lawyer.org/downloads/scripts" />
+      <variable name="wildfly.updaterequired" value="true" />
     </variables>
     <codeSigning windowsEnabled="true" windowsPkcs12File="./sectigo-codesigning.pfx" />
-    <jreBundles jdkProviderId="Liberica" release="8/8u302+8" />
+    <jreBundles jdkProviderId="Liberica" release="17/17.0.9+11">
+      <modules>
+        <defaultModules set="all" />
+      </modules>
+    </jreBundles>
   </application>
   <files>
     <mountPoints>
@@ -1429,14 +1434,14 @@ return true;</property>
               </formComponent>
             </formComponents>
           </screen>
-          <screen name="MySQL ask for root password" id="1003" beanClass="com.install4j.runtime.beans.screens.FormScreen">
+          <screen name="Wildfly-Upgrade: MySQL ask for root password" id="1003" beanClass="com.install4j.runtime.beans.screens.FormScreen">
             <serializedBean>
               <property name="subTitle" type="string">${i18n:screens.mysqlinstall.subtitle}</property>
               <property name="title" type="string">${i18n:screens.mysqlinstall.title}</property>
             </serializedBean>
             <condition>if(context.getBooleanVariable("sys.confirmedUpdateInstallation")) {
     // since we now use Flyway, we should not need a database password anymore
-    return false;
+    return "true".equalsIgnoreCase(context.getCompilerVariable("wildfly.updaterequired").toString());
 }
 
 // can be null in case of update runs
@@ -2564,7 +2569,7 @@ if(Util.isWindows()) {
               </formComponent>
             </formComponents>
           </screen>
-          <screen name="Update-1.13-to-1.14" id="1834" beanClass="com.install4j.runtime.beans.screens.FormScreen">
+          <screen name="Update-2.5-to-2.6" id="1834" beanClass="com.install4j.runtime.beans.screens.FormScreen">
             <serializedBean>
               <property name="subTitle" type="string">Ihre Installation wird aktualisiert...</property>
               <property name="title" type="string">Update auf Version ${installer:sys.version}</property>
@@ -2779,11 +2784,49 @@ context.goForward(1, true, true);
                 </serializedBean>
                 <condition>Util.isMacOS()</condition>
               </action>
-              <action name="Installiere j-lawyer.org 1.14 Serverdateien" id="1845" beanClass="com.install4j.runtime.beans.actions.control.SetMessageAction" actionElevationType="none">
+              <action name="Installiere j-lawyer.org Serverdateien" id="1845" beanClass="com.install4j.runtime.beans.actions.control.SetMessageAction" actionElevationType="none">
                 <serializedBean>
                   <property name="statusMessage" type="string">Installiere j-lawyer.org Serverdateien</property>
                   <property name="useStatus" type="boolean" value="true" />
                 </serializedBean>
+              </action>
+              <action name="Wildfly-Upgrade: Rename old Wildfly" id="2939" beanClass="com.install4j.runtime.beans.actions.files.MoveFileAction" actionElevationType="elevated" rollbackBarrierExitCode="0">
+                <serializedBean>
+                  <property name="destinationFile">
+                    <object class="java.io.File">
+                      <string>${installer:sys.installationDir}/wildfly16</string>
+                    </object>
+                  </property>
+                  <property name="files" type="array" class="java.io.File" length="1">
+                    <element index="0">
+                      <object class="java.io.File">
+                        <string>${installer:sys.installationDir}/wildfly</string>
+                      </object>
+                    </element>
+                  </property>
+                </serializedBean>
+                <condition>if(context.getBooleanVariable("sys.confirmedUpdateInstallation")) {
+    // since we now use Flyway, we should not need a database password anymore
+    return "true".equalsIgnoreCase(context.getCompilerVariable("wildfly.updaterequired").toString());
+} else {
+    return false;
+}</condition>
+              </action>
+              <action name="Wildfly-Upgrade: Install new Wildfly" id="2938" beanClass="com.install4j.runtime.beans.actions.InstallFilesAction" actionElevationType="elevated" rollbackBarrierExitCode="0" failureStrategy="quit" errorMessage="${i18n:FileCorrupted}">
+                <serializedBean>
+                  <property name="fileFilterScript">
+                    <object class="com.install4j.api.beans.ScriptProperty">
+                      <property name="value" type="string">fileInfo.getRelativeFilePath().indexOf("wildfly")&gt;-1
+</property>
+                    </object>
+                  </property>
+                </serializedBean>
+                <condition>if(context.getBooleanVariable("sys.confirmedUpdateInstallation")) {
+    // since we now use Flyway, we should not need a database password anymore
+    return "true".equalsIgnoreCase(context.getCompilerVariable("wildfly.updaterequired").toString());
+} else {
+       return false;
+   }</condition>
               </action>
               <action name="Install Update Files" id="1844" beanClass="com.install4j.runtime.beans.actions.InstallFilesAction" actionElevationType="elevated" multiExec="true" errorMessage="${i18n:FileCorrupted}">
                 <serializedBean>
@@ -2799,7 +2842,7 @@ fileInfo.getRelativeFilePath().endsWith(".odt")
                   </property>
                 </serializedBean>
               </action>
-              <action name="Replace MySQL password in Wildfly configuration" id="2530" beanClass="com.install4j.runtime.beans.actions.text.ModifyTextFileAction" enabled="false" actionElevationType="elevated">
+              <action name="Wildfly-Upgrade: Replace MySQL password in Wildfly configuration" id="2530" beanClass="com.install4j.runtime.beans.actions.text.ModifyTextFileAction" actionElevationType="elevated">
                 <serializedBean>
                   <property name="encoding" type="string" />
                   <property name="failIfNoReplacement" type="boolean" value="true" />
@@ -2813,8 +2856,14 @@ fileInfo.getRelativeFilePath().endsWith(".odt")
                   <property name="replaceValue" type="string">${installer:mysql.rootpassword}</property>
                   <property name="searchValue" type="string">jlawyerdbpwd</property>
                 </serializedBean>
+                <condition>if(context.getBooleanVariable("sys.confirmedUpdateInstallation")) {
+    // since we now use Flyway, we should not need a database password anymore
+    return "true".equalsIgnoreCase(context.getCompilerVariable("wildfly.updaterequired").toString());
+} else {
+       return false;
+   }</condition>
               </action>
-              <action name="Set installation dir in Wildlfy configuration" id="2531" beanClass="com.install4j.runtime.beans.actions.text.ModifyTextFileAction" enabled="false" actionElevationType="elevated">
+              <action name="Wildfly-Upgrade: Set installation dir in Wildlfy configuration" id="2531" beanClass="com.install4j.runtime.beans.actions.text.ModifyTextFileAction" actionElevationType="elevated">
                 <serializedBean>
                   <property name="encoding" type="string" />
                   <property name="files" type="array" class="java.io.File" length="1">
@@ -2827,8 +2876,14 @@ fileInfo.getRelativeFilePath().endsWith(".odt")
                   <property name="replaceValue" type="string">${installer:sys.installationDir}</property>
                   <property name="searchValue" type="string">JLAWYERSERVERINSTALLATIONDIR</property>
                 </serializedBean>
+                <condition>if(context.getBooleanVariable("sys.confirmedUpdateInstallation")) {
+    // since we now use Flyway, we should not need a database password anymore
+    return "true".equalsIgnoreCase(context.getCompilerVariable("wildfly.updaterequired").toString());
+} else {
+       return false;
+   }</condition>
               </action>
-              <action id="2639" beanClass="com.install4j.runtime.beans.actions.files.MoveFileAction" enabled="false" actionElevationType="elevated" rollbackBarrierExitCode="0">
+              <action name="Wildfly-Upgrade: Move files and directories" id="2639" beanClass="com.install4j.runtime.beans.actions.files.MoveFileAction" enabled="false" actionElevationType="elevated" rollbackBarrierExitCode="0">
                 <serializedBean>
                   <property name="destinationFile">
                     <object class="java.io.File">
@@ -2844,9 +2899,12 @@ fileInfo.getRelativeFilePath().endsWith(".odt")
                   </property>
                   <property name="overwriteMode" type="enum" class="com.install4j.api.context.OverwriteMode" value="ALWAYS" />
                 </serializedBean>
-                <condition>Util.isLinux()</condition>
+                <condition>if(context.getBooleanVariable("sys.confirmedUpdateInstallation")) {
+    // since we now use Flyway, we should not need a database password anymore
+    return Util.isLinux() &amp;&amp; "true".equalsIgnoreCase(context.getVariable("wildfly.updaterequired").toString());
+}</condition>
               </action>
-              <action name="Download script" id="2637" beanClass="com.install4j.runtime.beans.actions.net.DownloadFileAction" enabled="false" actionElevationType="elevated">
+              <action name="Wildfly-Upgrade: Download script" id="2637" beanClass="com.install4j.runtime.beans.actions.net.DownloadFileAction" enabled="false" actionElevationType="elevated">
                 <serializedBean>
                   <property name="targetFile">
                     <object class="java.io.File">
@@ -2855,9 +2913,12 @@ fileInfo.getRelativeFilePath().endsWith(".odt")
                   </property>
                   <property name="url" type="string">${compiler:download.scripts.base}/j-lawyer-server</property>
                 </serializedBean>
-                <condition>Util.isLinux()</condition>
+                <condition>if(context.getBooleanVariable("sys.confirmedUpdateInstallation")) {
+    // since we now use Flyway, we should not need a database password anymore
+    return Util.isLinux() &amp;&amp; "true".equalsIgnoreCase(context.getVariable("wildfly.updaterequired").toString());
+}</condition>
               </action>
-              <action name="Set installation dir in Wildlfy configuration" id="2638" beanClass="com.install4j.runtime.beans.actions.text.ModifyTextFileAction" enabled="false" actionElevationType="elevated">
+              <action name="Wildfly-Upgrade: Set installation dir in Wildlfy configuration" id="2638" beanClass="com.install4j.runtime.beans.actions.text.ModifyTextFileAction" enabled="false" actionElevationType="elevated">
                 <serializedBean>
                   <property name="encoding" type="string" />
                   <property name="files" type="array" class="java.io.File" length="1">
@@ -2870,9 +2931,12 @@ fileInfo.getRelativeFilePath().endsWith(".odt")
                   <property name="replaceValue" type="string">${installer:sys.installationDir}</property>
                   <property name="searchValue" type="string">JLAWYERSERVERINSTALLATIONDIR</property>
                 </serializedBean>
-                <condition>Util.isLinux()</condition>
+                <condition>if(context.getBooleanVariable("sys.confirmedUpdateInstallation")) {
+    // since we now use Flyway, we should not need a database password anymore
+    return Util.isLinux() &amp;&amp; "true".equalsIgnoreCase(context.getVariable("wildfly.updaterequired").toString());
+}</condition>
               </action>
-              <action id="2640" beanClass="com.install4j.runtime.beans.actions.files.SetOwnerAction" enabled="false" actionElevationType="elevated">
+              <action name="Wildfly-Upgrade: Set the owner of files and directories" id="2640" beanClass="com.install4j.runtime.beans.actions.files.SetOwnerAction" actionElevationType="elevated">
                 <serializedBean>
                   <property name="files" type="array" class="java.io.File" length="1">
                     <element index="0">
@@ -2884,7 +2948,12 @@ fileInfo.getRelativeFilePath().endsWith(".odt")
                   <property name="owner" type="string">j-lawyer-server:j-lawyer-server</property>
                   <property name="recursive" type="boolean" value="true" />
                 </serializedBean>
-                <condition>Util.isLinux()</condition>
+                <condition>if(context.getBooleanVariable("sys.confirmedUpdateInstallation")) {
+    // since we now use Flyway, we should not need a database password anymore
+    return Util.isLinux() &amp;&amp; "true".equalsIgnoreCase(context.getCompilerVariable("wildfly.updaterequired").toString());
+} else {
+    return false;
+}</condition>
               </action>
               <action name="Set JAVA_HOME in start-server.bat" id="2532" beanClass="com.install4j.runtime.beans.actions.text.ModifyTextFileAction" actionElevationType="elevated">
                 <serializedBean>
@@ -2960,7 +3029,7 @@ fileInfo.getRelativeFilePath().endsWith(".odt")
                 </serializedBean>
                 <condition>Util.isLinux() || Util.isMacOS()</condition>
               </action>
-              <action name="Replace Wildfly directory in j-lawyer-server.plist" id="2743" beanClass="com.install4j.runtime.beans.actions.text.ModifyTextFileAction" enabled="false" actionElevationType="elevated">
+              <action name="Wildfly-Upgrade: Replace Wildfly directory in j-lawyer-server.plist" id="2743" beanClass="com.install4j.runtime.beans.actions.text.ModifyTextFileAction" enabled="false" actionElevationType="elevated">
                 <serializedBean>
                   <property name="encoding" type="string" />
                   <property name="failIfNoReplacement" type="boolean" value="true" />
@@ -2974,7 +3043,10 @@ fileInfo.getRelativeFilePath().endsWith(".odt")
                   <property name="replaceValue" type="string">wildfly</property>
                   <property name="searchValue" type="string">wildfly-9.0.2.Final</property>
                 </serializedBean>
-                <condition>Util.isMacOS()</condition>
+                <condition>if(context.getBooleanVariable("sys.confirmedUpdateInstallation")) {
+    // since we now use Flyway, we should not need a database password anymore
+    return Util.isMacOS() &amp;&amp; "true".equalsIgnoreCase(context.getVariable("wildfly.updaterequired").toString());
+}</condition>
               </action>
               <action name="Aktualisiere die j-lawyer.org Datenbank..." id="1838" beanClass="com.install4j.runtime.beans.actions.control.SetMessageAction" enabled="false" actionElevationType="none">
                 <serializedBean>
@@ -3076,116 +3148,13 @@ fileInfo.getRelativeFilePath().endsWith(".odt")
                 </serializedBean>
                 <condition>Util.isMacOS()</condition>
               </action>
-              <group name="(Re)Set PW Hashing Configuration" id="2929" beanClass="com.install4j.runtime.beans.groups.ActionGroup" actionElevationType="elevated">
-                <beans>
-                  <action name="Reset hashAlgorithm" id="2930" beanClass="com.install4j.runtime.beans.actions.text.ModifyTextFileAction" actionElevationType="elevated" multiExec="true">
-                    <serializedBean>
-                      <property name="encoding" type="string" />
-                      <property name="failIfNoReplacement" type="boolean" value="true" />
-                      <property name="files" type="array" class="java.io.File" length="1">
-                        <element index="0">
-                          <object class="java.io.File">
-                            <string>wildfly/standalone/configuration/standalone.xml</string>
-                          </object>
-                        </element>
-                      </property>
-                      <property name="searchValue" type="string">&lt;module-option name="hashAlgorithm" value="SHA-256"/&gt;</property>
-                    </serializedBean>
-                  </action>
-                  <action name="Reset hashEncoding" id="2931" beanClass="com.install4j.runtime.beans.actions.text.ModifyTextFileAction" actionElevationType="elevated" multiExec="true">
-                    <serializedBean>
-                      <property name="encoding" type="string" />
-                      <property name="failIfNoReplacement" type="boolean" value="true" />
-                      <property name="files" type="array" class="java.io.File" length="1">
-                        <element index="0">
-                          <object class="java.io.File">
-                            <string>wildfly/standalone/configuration/standalone.xml</string>
-                          </object>
-                        </element>
-                      </property>
-                      <property name="searchValue" type="string">&lt;module-option name="hashEncoding" value="base64"/&gt;</property>
-                    </serializedBean>
-                  </action>
-                  <action name="Reset hashUserPassword" id="2932" beanClass="com.install4j.runtime.beans.actions.text.ModifyTextFileAction" actionElevationType="elevated" multiExec="true">
-                    <serializedBean>
-                      <property name="encoding" type="string" />
-                      <property name="failIfNoReplacement" type="boolean" value="true" />
-                      <property name="files" type="array" class="java.io.File" length="1">
-                        <element index="0">
-                          <object class="java.io.File">
-                            <string>wildfly/standalone/configuration/standalone.xml</string>
-                          </object>
-                        </element>
-                      </property>
-                      <property name="searchValue" type="string">&lt;module-option name="hashUserPassword" value="true"/&gt;</property>
-                    </serializedBean>
-                  </action>
-                  <action name="Reset hashStorePassword" id="2933" beanClass="com.install4j.runtime.beans.actions.text.ModifyTextFileAction" actionElevationType="elevated" multiExec="true">
-                    <serializedBean>
-                      <property name="encoding" type="string" />
-                      <property name="failIfNoReplacement" type="boolean" value="true" />
-                      <property name="files" type="array" class="java.io.File" length="1">
-                        <element index="0">
-                          <object class="java.io.File">
-                            <string>wildfly/standalone/configuration/standalone.xml</string>
-                          </object>
-                        </element>
-                      </property>
-                      <property name="searchValue" type="string">&lt;module-option name="hashStorePassword" value="false"/&gt;</property>
-                    </serializedBean>
-                  </action>
-                  <action name="Add hashing configuration" id="2934" beanClass="com.install4j.runtime.beans.actions.text.ModifyTextFileAction" actionElevationType="elevated" multiExec="true">
-                    <serializedBean>
-                      <property name="encoding" type="string" />
-                      <property name="failIfNoReplacement" type="boolean" value="true" />
-                      <property name="files" type="array" class="java.io.File" length="1">
-                        <element index="0">
-                          <object class="java.io.File">
-                            <string>wildfly/standalone/configuration/standalone.xml</string>
-                          </object>
-                        </element>
-                      </property>
-                      <property name="replaceValue" type="string">&lt;module-option name="unauthenticatedIdentity" value="anonymous"/&gt;&lt;module-option name="hashAlgorithm" value="SHA-256"/&gt;&lt;module-option name="hashEncoding" value="base64"/&gt;&lt;module-option name="hashUserPassword" value="true"/&gt;&lt;module-option name="hashStorePassword" value="false"/&gt;</property>
-                      <property name="searchValue" type="string">&lt;module-option name="unauthenticatedIdentity" value="anonymous"/&gt;</property>
-                    </serializedBean>
-                  </action>
-                  <action name="Replace legacy database view AppRoleBean" id="2936" beanClass="com.install4j.runtime.beans.actions.text.ModifyTextFileAction" actionElevationType="elevated" multiExec="true">
-                    <serializedBean>
-                      <property name="encoding" type="string" />
-                      <property name="files" type="array" class="java.io.File" length="1">
-                        <element index="0">
-                          <object class="java.io.File">
-                            <string>wildfly/standalone/configuration/standalone.xml</string>
-                          </object>
-                        </element>
-                      </property>
-                      <property name="replaceValue" type="string">security_roles</property>
-                      <property name="searchValue" type="string">AppRoleBean</property>
-                    </serializedBean>
-                  </action>
-                  <action name="Replace legacy database view AppUserBean" id="2937" beanClass="com.install4j.runtime.beans.actions.text.ModifyTextFileAction" actionElevationType="elevated" multiExec="true">
-                    <serializedBean>
-                      <property name="encoding" type="string" />
-                      <property name="files" type="array" class="java.io.File" length="1">
-                        <element index="0">
-                          <object class="java.io.File">
-                            <string>wildfly/standalone/configuration/standalone.xml</string>
-                          </object>
-                        </element>
-                      </property>
-                      <property name="replaceValue" type="string">security_users</property>
-                      <property name="searchValue" type="string">AppUserBean</property>
-                    </serializedBean>
-                  </action>
-                </beans>
-              </group>
               <action name="Starte j-lawyer.org Server..." id="1896" beanClass="com.install4j.runtime.beans.actions.control.SetMessageAction" actionElevationType="none">
                 <serializedBean>
                   <property name="statusMessage" type="string">Starte j-lawyer.org Server...</property>
                   <property name="useStatus" type="boolean" value="true" />
                 </serializedBean>
               </action>
-              <action id="2535" beanClass="com.install4j.runtime.beans.actions.files.CopyFileAction" enabled="false" actionElevationType="elevated">
+              <action name="Wildfly-Upgrade: Copy files and directories" id="2535" beanClass="com.install4j.runtime.beans.actions.files.CopyFileAction" actionElevationType="elevated">
                 <serializedBean>
                   <property name="destinationFile">
                     <object class="java.io.File">
@@ -3202,9 +3171,15 @@ fileInfo.getRelativeFilePath().endsWith(".odt")
                   <property name="overwriteMode" type="enum" class="com.install4j.api.context.OverwriteMode" value="ALWAYS" />
                   <property name="showProgress" type="boolean" value="true" />
                 </serializedBean>
-                <condition>Util.isWindows() &amp;&amp; "service".equalsIgnoreCase((String)context.getVariable("jlawyerserver.service"))</condition>
+                <condition>if(context.getBooleanVariable("sys.confirmedUpdateInstallation")) {
+    // since we now use Flyway, we should not need a database password anymore
+    return Util.isWindows() &amp;&amp; "service".equalsIgnoreCase((String)context.getVariable("jlawyerserver.service")) &amp;&amp; "true".equalsIgnoreCase(context.getCompilerVariable("wildfly.updaterequired").toString());
+} else {
+       return false;
+   }
+</condition>
               </action>
-              <action name="Upgrade service to 1.10" id="2529" beanClass="com.install4j.runtime.beans.actions.misc.RunExecutableAction" enabled="false" actionElevationType="elevated">
+              <action name="Wildfly-Upgrade: Upgrade service to 2.6" id="2529" beanClass="com.install4j.runtime.beans.actions.misc.RunExecutableAction" enabled="false" actionElevationType="elevated">
                 <serializedBean>
                   <property name="arguments" type="array" elementType="string" length="1">
                     <element index="0">${installer:sys.installationDir}\jre</element>
@@ -3227,7 +3202,12 @@ fileInfo.getRelativeFilePath().endsWith(".odt")
                     </object>
                   </property>
                 </serializedBean>
-                <condition>Util.isWindows()</condition>
+                <condition>if(context.getBooleanVariable("sys.confirmedUpdateInstallation")) {
+    // since we now use Flyway, we should not need a database password anymore
+    return Util.isWindows() &amp;&amp; "service".equalsIgnoreCase((String)context.getVariable("jlawyerserver.service")) &amp;&amp; "true".equalsIgnoreCase(context.getVariable("wildfly.updaterequired").toString());
+}
+
+</condition>
               </action>
               <action name="*.sh chmod" id="2641" beanClass="com.install4j.runtime.beans.actions.files.SetModeAction" actionElevationType="elevated">
                 <serializedBean>
@@ -3276,6 +3256,18 @@ fileInfo.getRelativeFilePath().endsWith(".odt")
                   <property name="mode" type="string">ugo+x</property>
                 </serializedBean>
                 <condition>Util.isLinux() || Util.isMacOS()</condition>
+              </action>
+              <action name="Wildfly-Upgrade: set JAVA_HOME in service configuration on Linux" id="2940" beanClass="com.install4j.runtime.beans.actions.text.WriteTextFileAction" actionElevationType="elevated" rollbackBarrierExitCode="0">
+                <serializedBean>
+                  <property name="append" type="boolean" value="true" />
+                  <property name="file">
+                    <object class="java.io.File">
+                      <string>/etc/default/j-lawyer-server</string>
+                    </object>
+                  </property>
+                  <property name="text" type="string">JAVA_HOME="${installer:sys.installationDir}/jre"</property>
+                </serializedBean>
+                <condition>Util.isLinux() &amp;&amp; context.getBooleanVariable("sys.confirmedUpdateInstallation")</condition>
               </action>
               <action name="Start service on Windows" id="1893" beanClass="com.install4j.runtime.beans.actions.misc.RunExecutableAction" actionElevationType="elevated">
                 <serializedBean>
@@ -3336,7 +3328,7 @@ fileInfo.getRelativeFilePath().endsWith(".odt")
                   </property>
                   <property name="time">
                     <object class="java.util.Date">
-                      <long>1694185459793</long>
+                      <long>1709302358044</long>
                     </object>
                   </property>
                 </serializedBean>
@@ -3835,6 +3827,7 @@ cd /usr/local/j-lawyer-server/ &amp;&amp; sudo sh /usr/local/j-lawyer-server/ins
   </mediaSets>
   <buildIds buildAll="false">
     <mediaSet refId="29" />
+    <mediaSet refId="1397" />
     <mediaSet refId="31" />
     <mediaSet refId="2927" />
   </buildIds>
